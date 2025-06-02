@@ -2,14 +2,19 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import '../public/icon.png'
+
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Hotel Silver Star - Digital Menu",
+  title: "Hotel-Silver-Star",
   description: "Delicious menu for Hotel Silver Star",
-    generator: 'v0.dev'
-}
+  generator: "v0.dev",
+  icons: {
+    icon: "/icon.png", // path is from public folder root
+  },
+};
 
 export default function RootLayout({
   children,

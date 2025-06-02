@@ -20,6 +20,12 @@ export default function AdminDashboard() {
     unavailableItems: 0,
   })
   const [isLoading, setIsLoading] = useState(true)
+  const [now, setNow] = useState<Date | null>(null)
+
+useEffect(() => {
+  setNow(new Date())
+}, [])
+
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -150,7 +156,7 @@ export default function AdminDashboard() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm lg:text-base text-gray-300">Last Updated</span>
-                <span className="text-sm lg:text-base text-gray-400">{new Date().toLocaleDateString()}</span>
+                <span className="text-sm lg:text-base text-gray-400">{now ? now.toLocaleDateString() : "Loading..."}</span>
               </div>
             </div>
           </CardContent>

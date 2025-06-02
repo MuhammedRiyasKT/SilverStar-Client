@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -53,6 +53,13 @@ export default function SettingsPage() {
       setIsLoading(false)
     }
   }
+
+  const [now, setNow] = useState<Date | null>(null)
+
+useEffect(() => {
+  setNow(new Date())
+}, [])
+
 
   return (
     <div className="space-y-4 lg:space-y-6">
@@ -217,7 +224,7 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-2">
               <Label className="text-amber-300 text-sm lg:text-base">Last Login</Label>
-              <p className="text-gray-300 text-sm lg:text-base">{new Date().toLocaleDateString()}</p>
+              <p className="text-gray-300 text-sm lg:text-base">{now ? now.toLocaleDateString() : "Loading..."}</p>
             </div>
             <div className="space-y-2">
               <Label className="text-amber-300 text-sm lg:text-base">Server Status</Label>

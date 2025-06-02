@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Plus, Edit, Trash2, Save, X, Search } from "lucide-react"
@@ -15,7 +14,6 @@ import { toast } from "sonner"
 interface MenuItem {
   _id: string
   name: string
-  description?: string
   category: {
     _id: string
     name: string
@@ -34,8 +32,6 @@ interface MenuItem {
   }
   isAvailable: boolean
   isVegetarian: boolean
-  isSpicy: boolean
-  preparationTime: number
   sortOrder: number
 }
 
@@ -56,7 +52,6 @@ export default function MenuItemsPage() {
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [formData, setFormData] = useState({
     name: "",
-    description: "",
     category: "",
     price: 0,
     sizes: {
@@ -68,8 +63,6 @@ export default function MenuItemsPage() {
     },
     isAvailable: true,
     isVegetarian: false,
-    isSpicy: false,
-    preparationTime: 15,
     sortOrder: 0,
   })
 
@@ -93,14 +86,11 @@ export default function MenuItemsPage() {
     try {
       const formDataToSend = new FormData()
       formDataToSend.append("name", formData.name)
-      formDataToSend.append("description", formData.description)
       formDataToSend.append("category", formData.category)
       formDataToSend.append("price", formData.price.toString())
       formDataToSend.append("sizes", JSON.stringify(formData.sizes))
       formDataToSend.append("isAvailable", formData.isAvailable.toString())
       formDataToSend.append("isVegetarian", formData.isVegetarian.toString())
-      formDataToSend.append("isSpicy", formData.isSpicy.toString())
-      formDataToSend.append("preparationTime", formData.preparationTime.toString())
       formDataToSend.append("sortOrder", formData.sortOrder.toString())
 
       if (imageFile) {
@@ -122,14 +112,11 @@ export default function MenuItemsPage() {
     try {
       const formDataToSend = new FormData()
       formDataToSend.append("name", formData.name)
-      formDataToSend.append("description", formData.description)
       formDataToSend.append("category", formData.category)
       formDataToSend.append("price", formData.price.toString())
       formDataToSend.append("sizes", JSON.stringify(formData.sizes))
       formDataToSend.append("isAvailable", formData.isAvailable.toString())
       formDataToSend.append("isVegetarian", formData.isVegetarian.toString())
-      formDataToSend.append("isSpicy", formData.isSpicy.toString())
-      formDataToSend.append("preparationTime", formData.preparationTime.toString())
       formDataToSend.append("sortOrder", formData.sortOrder.toString())
 
       if (imageFile) {
@@ -161,7 +148,6 @@ export default function MenuItemsPage() {
     setEditingItem(item)
     setFormData({
       name: item.name,
-      description: item.description || "",
       category: item.category._id,
       price: item.price,
       sizes: item.sizes || {
@@ -173,8 +159,6 @@ export default function MenuItemsPage() {
       },
       isAvailable: item.isAvailable,
       isVegetarian: item.isVegetarian,
-      isSpicy: item.isSpicy,
-      preparationTime: item.preparationTime,
       sortOrder: item.sortOrder,
     })
   }
@@ -185,7 +169,6 @@ export default function MenuItemsPage() {
     setImageFile(null)
     setFormData({
       name: "",
-      description: "",
       category: "",
       price: 0,
       sizes: {
@@ -197,8 +180,6 @@ export default function MenuItemsPage() {
       },
       isAvailable: true,
       isVegetarian: false,
-      isSpicy: false,
-      preparationTime: 15,
       sortOrder: 0,
     })
   }
@@ -305,7 +286,7 @@ export default function MenuItemsPage() {
                   <SelectContent>
                     {categories.map((category) => (
                       <SelectItem key={category._id} value={category._id}>
-                        {category.name}
+                        {category?.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -324,33 +305,6 @@ export default function MenuItemsPage() {
                   className="bg-black/50 border-amber-400/50 text-white text-sm lg:text-base"
                 />
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="preparationTime" className="text-amber-300 text-sm lg:text-base">
-                  Prep Time (min)
-                </Label>
-                <Input
-                  id="preparationTime"
-                  type="number"
-                  value={formData.preparationTime}
-                  onChange={(e) => setFormData({ ...formData, preparationTime: Number.parseInt(e.target.value) || 15 })}
-                  className="bg-black/50 border-amber-400/50 text-white text-sm lg:text-base"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description" className="text-amber-300 text-sm lg:text-base">
-                Description
-              </Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="bg-black/50 border-amber-400/50 text-white text-sm lg:text-base"
-                placeholder="Menu item description"
-                rows={3}
-              />
             </div>
 
             {/* Sizes - Responsive Grid */}
@@ -404,7 +358,7 @@ export default function MenuItemsPage() {
             </div>
 
             {/* Switches - Responsive Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
               <div className="flex items-center space-x-2">
                 <Switch
                   id="isAvailable"
@@ -424,17 +378,6 @@ export default function MenuItemsPage() {
                 />
                 <Label htmlFor="isVegetarian" className="text-amber-300 text-sm lg:text-base">
                   Vegetarian
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="isSpicy"
-                  checked={formData.isSpicy}
-                  onCheckedChange={(checked) => setFormData({ ...formData, isSpicy: checked })}
-                />
-                <Label htmlFor="isSpicy" className="text-amber-300 text-sm lg:text-base">
-                  Spicy
                 </Label>
               </div>
 
@@ -481,7 +424,7 @@ export default function MenuItemsPage() {
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   <CardTitle className="text-base lg:text-lg text-amber-400 truncate">{item.name}</CardTitle>
-                  <p className="text-xs lg:text-sm text-gray-400">{item.category.name}</p>
+                  <p className="text-xs lg:text-sm text-gray-400">{item.name}</p>
                 </div>
                 <div className="flex space-x-1 lg:space-x-2 flex-shrink-0 ml-2">
                   <Button
@@ -513,8 +456,6 @@ export default function MenuItemsPage() {
               )}
 
               <div className="space-y-2">
-                <p className="text-gray-300 text-xs lg:text-sm line-clamp-2">{item.description || "No description"}</p>
-
                 <div className="flex items-center justify-between text-xs lg:text-sm">
                   <span className="text-gray-400">Base Price:</span>
                   <span className="text-amber-400 font-semibold">₹{item.price}</span>
@@ -546,7 +487,6 @@ export default function MenuItemsPage() {
 
                 <div className="flex flex-wrap gap-1 lg:gap-2 text-xs">
                   {item.isVegetarian && <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded">Veg</span>}
-                  {item.isSpicy && <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded">Spicy</span>}
                 </div>
               </div>
             </CardContent>
