@@ -225,7 +225,7 @@ const safeLocalStorage = {
 };
 
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  process.env.NEXT_PUBLIC_API_URL || "https://silverstar-serverside.onrender.com/api";
 
 const getToken = () => safeLocalStorage.get("admin_token");
 
