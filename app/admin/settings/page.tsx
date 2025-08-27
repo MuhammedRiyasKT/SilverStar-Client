@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label"
 import { Save, Eye, EyeOff } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import { toast } from "sonner"
+// Import your settings API here
+import { settingsAPI } from "@/lib/api"
 
 export default function SettingsPage() {
   const { user, changePassword } = useAuth()
@@ -60,6 +62,31 @@ useEffect(() => {
   setNow(new Date())
 }, [])
 
+// inside SettingsPage component
+const [hotelLocation, setHotelLocation] = useState({ hotelLat: 10.841156, hotelLon: 76.109505 });
+
+useEffect(() => {
+  // Load current hotel settings
+  const fetchSettings = async () => {
+    try {
+      const res = await settingsAPI.get();
+      if (res.success) setHotelLocation({ hotelLat: res.data.hotelLat, hotelLon: res.data.hotelLon });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  fetchSettings();
+}, []);
+
+const handleSaveLocation = async () => {
+  try {
+    await settingsAPI.update(hotelLocation);
+    toast.success("Hotel location updated successfully");
+  } catch (err: any) {
+    console.error(err);
+    toast.error(err.message || "Failed to update hotel location");
+  }
+};
 
   return (
     <div className="space-y-4 lg:space-y-6">
@@ -210,6 +237,43 @@ useEffect(() => {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="bg-gradient-to-br from-gray-900/80 to-black/80 border-amber-400/30 mt-4">
+  <CardHeader className="p-4 lg:p-6">
+    <CardTitle className="text-lg lg:text-xl text-amber-400">Hotel Location</CardTitle>
+  </CardHeader>
+  <CardContent className="p-4 lg:p-6 pt-0 space-y-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="space-y-2">
+        <Label className="text-amber-300 text-sm lg:text-base">Latitude</Label>
+        <Input
+          type="number"
+          step="0.000001"
+          value={hotelLocation.hotelLat}
+          onChange={(e) => setHotelLocation({ ...hotelLocation, hotelLat: parseFloat(e.target.value) })}
+          className="bg-black/50 border-amber-400/50 text-white"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label className="text-amber-300 text-sm lg:text-base">Longitude</Label>
+        <Input
+          type="number"
+          step="0.000001"
+          value={hotelLocation.hotelLon}
+          onChange={(e) => setHotelLocation({ ...hotelLocation, hotelLon: parseFloat(e.target.value) })}
+          className="bg-black/50 border-amber-400/50 text-white"
+        />
+      </div>
+    </div>
+    <Button
+      onClick={handleSaveLocation}
+      className="w-full mt-4 bg-gradient-to-r from-amber-400 to-yellow-500 text-black font-bold hover:from-amber-500 hover:to-yellow-600"
+    >
+      Save Location
+    </Button>
+  </CardContent>
+</Card>
+
 
       {/* System Information - Responsive */}
       <Card className="bg-gradient-to-br from-gray-900/80 to-black/80 border-amber-400/30">
