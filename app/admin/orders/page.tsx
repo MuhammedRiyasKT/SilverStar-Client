@@ -241,8 +241,8 @@ interface Order {
   createdAt: string;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://silverstar-serverside.onrender.com";
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "https://silverstar-serverside.onrender.com";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
