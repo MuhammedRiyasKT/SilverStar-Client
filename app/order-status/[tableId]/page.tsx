@@ -298,9 +298,9 @@ interface Order {
 }
 
 // ----- Constants (Your original code, unchanged) -----
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://silverstar-serverside.onrender.com";
 const SOCKET_URL =
-  process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000";
+  process.env.NEXT_PUBLIC_SOCKET_URL || "https://silverstar-serverside.onrender.com";
 
 // --- Functional Component Starts Here ---
 export default function OrderStatusPage() {
