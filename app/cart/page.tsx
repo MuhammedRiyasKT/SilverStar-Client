@@ -159,8 +159,8 @@ export default function CartPage() {
 
         console.log("User distance from hotel:", distance, "meters");
 
-        if (distance > 500) {
-          alert("❌ You are outside the hotel. Orders are only allowed inside (within 50m).");
+        if (distance > 150) {
+          alert("❌ You are outside the hotel. Orders are only allowed inside (within 150m).");
           return;
         }
 
