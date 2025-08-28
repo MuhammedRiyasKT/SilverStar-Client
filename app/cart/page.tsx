@@ -33,13 +33,16 @@ export default function CartPage() {
   useEffect(() => {
     // Load current hotel settings
     const fetchSettings = async () => {
-      try {
-        const res = await settingsAPI.get();
-        if (res.success) setHotelLocation({ hotelLat: res.data.hotelLat, hotelLon: res.data.hotelLon });
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    try {
+      const res = await settingsAPI.get();
+      if (res.success) setHotelLocation({ 
+        hotelLat: parseFloat(res.data.hotelLat),  // string → number
+        hotelLon: parseFloat(res.data.hotelLon)   // string → number
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
     fetchSettings();
   }, []);
 
