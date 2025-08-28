@@ -62,31 +62,40 @@ useEffect(() => {
   setNow(new Date())
 }, [])
 
-// inside SettingsPage component
-const [hotelLocation, setHotelLocation] = useState({ hotelLat: 10.841156, hotelLon: 76.109505 });
+const [hotelLocation, setHotelLocation] = useState<{ hotelLat: string; hotelLon: string }>({
+    hotelLat: "10.841156",
+    hotelLon: "76.109505",
+  });
 
-useEffect(() => {
-  // Load current hotel settings
-  const fetchSettings = async () => {
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await settingsAPI.get();
+        if (res.success) {
+          setHotelLocation({
+            hotelLat: res.data.hotelLat, // already string
+            hotelLon: res.data.hotelLon,
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  const handleSaveLocation = async () => {
     try {
-      const res = await settingsAPI.get();
-      if (res.success) setHotelLocation({ hotelLat: res.data.hotelLat, hotelLon: res.data.hotelLon });
-    } catch (err) {
+      await settingsAPI.update({
+        hotelLat: hotelLocation.hotelLat,
+        hotelLon: hotelLocation.hotelLon,
+      });
+      toast.success("Hotel location updated successfully");
+    } catch (err: any) {
       console.error(err);
+      toast.error(err.message || "Failed to update hotel location");
     }
   };
-  fetchSettings();
-}, []);
-
-const handleSaveLocation = async () => {
-  try {
-    await settingsAPI.update(hotelLocation);
-    toast.success("Hotel location updated successfully");
-  } catch (err: any) {
-    console.error(err);
-    toast.error(err.message || "Failed to update hotel location");
-  }
-};
 
   return (
     <div className="space-y-4 lg:space-y-6">
