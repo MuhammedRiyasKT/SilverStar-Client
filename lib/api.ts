@@ -341,7 +341,8 @@ getAll: async (params?: { status?: string; tableId?: string, date?: string }) =>
 
 export const settingsAPI = {
   get: async () => apiRequest("/settings"),
-  update: async (data: { hotelLat: number; hotelLon: number }) =>
+  update: async (data: { hotelLat: string; hotelLon: string }) =>
     apiRequest("/settings", { method: "PUT", body: JSON.stringify(data) }),
 };
+
 
